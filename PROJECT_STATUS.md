@@ -22,7 +22,7 @@ PARTIALLY VALIDATED
 
 ## Known Failures
 
-- Remote fetch blocked by DNS on 2026-09-19.
+- GitHub CI rerun pending after adding explicit Python package discovery for the analytics source tree.
 
 ## Current P0 Objective
 
