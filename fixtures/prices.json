@@ -1,0 +1,6 @@
+[
+  {"sku":"model:llama-small:input","unit":"million_tokens","price":"0.20","currency":"USD","effective_from":"2026-01-01T00:00:00Z","source":"local-demo-price-catalog","version":"2026-01"},
+  {"sku":"model:llama-small:output","unit":"million_tokens","price":"0.80","currency":"USD","effective_from":"2026-01-01T00:00:00Z","source":"local-demo-price-catalog","version":"2026-01"},
+  {"sku":"model:llama-small:cached","unit":"million_tokens","price":"0.05","currency":"USD","effective_from":"2026-01-01T00:00:00Z","source":"local-demo-price-catalog","version":"2026-01"},
+  {"sku":"compute:llama-small:gpu_hour","unit":"gpu_hour","price":"2.40","currency":"USD","effective_from":"2026-01-01T00:00:00Z","source":"local-simulated-gpu-price","version":"2026-01"}
+]

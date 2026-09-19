@@ -1,0 +1,5 @@
+[
+  {"event_id":"evt-001","timestamp":"2026-09-19T08:00:00Z","tenant_id":"team-search","team":"search","cost_center":"cc-search","request_id":"req-healthy","trace_id":"trace-healthy","model":"llama-small","deployment":"model-v1","input_tokens":845,"output_tokens":318,"cached_tokens":100,"ttft_ms":420,"tpot_ms":12,"e2e_ms":2810,"queue_ms":170,"tool_ms":0,"success":true},
+  {"event_id":"evt-002","timestamp":"2026-09-19T08:02:00Z","tenant_id":"team-payments","team":"payments","cost_center":"cc-payments","request_id":"req-tool","trace_id":"trace-tool","model":"llama-small","deployment":"model-v1","input_tokens":500,"output_tokens":120,"cached_tokens":0,"ttft_ms":350,"tpot_ms":10,"e2e_ms":5100,"queue_ms":100,"tool_ms":3900,"success":true,"agent_run_id":"agent-1"},
+  {"event_id":"evt-003","timestamp":"2026-09-19T08:04:00Z","tenant_id":"team-search","team":"search","cost_center":"cc-search","request_id":"req-saturated","trace_id":"trace-saturated","model":"llama-small","deployment":"model-v2","input_tokens":1000,"output_tokens":600,"cached_tokens":0,"ttft_ms":1500,"tpot_ms":24,"e2e_ms":16000,"queue_ms":6000,"tool_ms":0,"success":true}
+]

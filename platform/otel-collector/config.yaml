@@ -1,0 +1,10 @@
+receivers: {otlp: {protocols: {grpc: {}, http: {}}}}
+processors:
+  memory_limiter: {check_interval: 1s, limit_mib: 256}
+  batch: {}
+  attributes/sanitize: {actions: [{key: gen_ai.prompt, action: delete}, {key: gen_ai.response.content, action: delete}]}
+exporters:
+  otlp/tempo: {endpoint: tempo:4317, tls: {insecure: true}}
+  debug: {verbosity: basic}
+service:
+  pipelines: {traces: {receivers: [otlp], processors: [memory_limiter, attributes/sanitize, batch], exporters: [otlp/tempo, debug]}}

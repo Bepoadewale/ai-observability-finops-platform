@@ -1,0 +1,10 @@
+groups:
+  - name: ai-platform
+    rules:
+      - record: ai:ttft:p95_seconds
+        expr: histogram_quantile(0.95, sum(rate(ai_request_ttft_seconds_bucket[5m])) by (le, model))
+      - alert: HighTTFT
+        expr: ai:ttft:p95_seconds > 1
+        for: 10m
+        labels: {severity: warning}
+        annotations: {summary: "Illustrative TTFT SLO breach", runbook_url: "docs/runbooks/high-ttft.md"}
