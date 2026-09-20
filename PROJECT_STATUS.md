@@ -4,6 +4,10 @@
 
 PARTIALLY VALIDATED
 
+## Maturity Model
+
+`FOUNDATION` → `PARTIALLY VALIDATED` → `LOCAL END-TO-END VALIDATED` → `PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE`.
+
 ## Executed and Verified
 
 - Analytics API, deterministic telemetry analysis, Decimal cost and SLO logic tests.
@@ -27,6 +31,15 @@ PARTIALLY VALIDATED
 ## Current P0 Objective
 
 Generate real local OTLP/Prometheus telemetry and display it in the compose stack.
+
+## Completion Blockers
+
+- No real AI telemetry producer or live OTel/Prometheus/Tempo/Grafana evidence has been executed.
+- Request correlation, generated-data SLO/error-budget effect, FinOps unit economics, and required failure scenarios are unexecuted.
+
+## Explicitly Unexecuted Production Adapters
+
+- Real GPU/DCGM hardware signals and production observability providers.
 
 ## Last Validation
 

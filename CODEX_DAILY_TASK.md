@@ -1,3 +1,3 @@
 # Daily Engineering Task
 
-Read control files, fetch/inspect branch/PR, run `make test lint`, then advance one P0 telemetry vertical slice. For Compose claims, verify processes and query real generated signals. Update factual status/backlog, commit/push branch only, and report exact commands/results.
+Read control files, fetch/inspect branch/PR, run `make test lint`, then ask: “What is the highest-value remaining blocker preventing PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE?” Advance that P0 telemetry slice. Do not select documentation polish, cosmetic refactors, or P2 work while blockers remain. For Compose claims, verify processes and query real generated signals. Update factual status/backlog, commit/push branch only, and report exact commands/results.
