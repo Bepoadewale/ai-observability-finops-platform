@@ -1,4 +1,15 @@
+# Completion Target
+
+PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE
+
+# Current Completion Blockers
+
+- Run a telemetry producer and local OTel/Prometheus/Tempo/Grafana stack with real data.
+- Demonstrate request correlation, cost/SLO impact, and normal/degraded/cost/tool/capacity scenarios.
+
 # P0 — Required for Portfolio Claim
+
+P0 blocks PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE; do not select P1/P2 work first.
 
 - Build a lightweight local AI telemetry generator/runtime.
 - Emit OTLP traces and Prometheus metrics through the collector.
