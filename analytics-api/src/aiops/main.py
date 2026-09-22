@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from aiops.correlation.service import AnalyticsService
@@ -8,9 +9,9 @@ from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.models.domain import Budget, PricingEntry, UsageEvent
 from fastapi import Depends, FastAPI, Header, HTTPException
 
-ROOT = Path(__file__).parents[3]
-prices = [PricingEntry.model_validate(item) for item in json.loads((ROOT / "fixtures/prices.json").read_text())]
-events = [UsageEvent.model_validate(item) for item in json.loads((ROOT / "fixtures/golden-events.json").read_text())]
+ROOT = Path(os.getenv("AIOPS_FIXTURES_DIR", Path(__file__).parents[3] / "fixtures"))
+prices = [PricingEntry.model_validate(item) for item in json.loads((ROOT / "prices.json").read_text())]
+events = [UsageEvent.model_validate(item) for item in json.loads((ROOT / "golden-events.json").read_text())]
 service = AnalyticsService(CostEngine(PriceCatalog(prices)), events)
 budgets: list[Budget] = []
 app = FastAPI(title="AI Observability + FinOps Platform", version="0.1.0")
@@ -18,8 +19,14 @@ app = FastAPI(title="AI Observability + FinOps Platform", version="0.1.0")
 
 def principal(authorization: str = Header(...)) -> tuple[str, str]:
     # Demo auth only: maps opaque local tokens to scopes; no tenant header is trusted.
-    tokens = {"Bearer tenant-search": ("tenant", "team-search"), "Bearer tenant-payments": ("tenant", "team-payments"), "Bearer finops-demo": ("finops", "*")}
-    if authorization not in tokens: raise HTTPException(401, "invalid credentials")
+    tokens = {
+        "Bearer tenant-search": ("tenant", "team-search"),
+        "Bearer tenant-payments": ("tenant", "team-payments"),
+        "Bearer finops-demo": ("finops", "*"),
+        "Bearer telemetry-producer": ("producer", "*"),
+    }
+    if authorization not in tokens:
+        raise HTTPException(401, "invalid credentials")
     return tokens[authorization]
 
 
@@ -45,6 +52,14 @@ def usage(identity=Depends(principal)):
     tenant = scoped_tenant(identity)
     data = [item for item in service.usage if tenant is None or item.tenant_id == tenant]
     return {"events": [item.model_dump(mode="json") for item in data], "classification": "synthetic demo telemetry"}
+
+
+@app.post("/api/v1/usage")
+def ingest_usage(event: UsageEvent, identity=Depends(principal)):
+    """Accept idempotent, metadata-only usage from the local demo AI workload."""
+    if identity[0] != "producer":
+        raise HTTPException(403, "telemetry producer role required")
+    return {"accepted": service.ingest(event), "event_id": event.event_id}
 
 @app.get("/api/v1/requests/{request_id}/analysis")
 def request_analysis(request_id: str, identity=Depends(principal)):

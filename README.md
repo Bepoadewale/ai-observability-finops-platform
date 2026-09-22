@@ -8,18 +8,26 @@ It complements the portfolio: Project 1 governs infrastructure, Project 2 serves
 
 - FastAPI analytics API with tenant-scoped access, request-to-cost analysis, idempotent usage-ingestion primitives, Decimal currency calculation, versioned pricing, SLO/error-budget calculation, and SLO-aware capacity advice.
 - Deterministic golden telemetry for two tenants, a tool-bound request, and a saturated deployment regression.
+- A local deterministic AI-workload fixture that emits real OTLP traces and Prometheus metrics,
+  forwards metadata-only usage to the analytics API, and supports normal and latency-degradation
+  demonstrations through Docker Compose.
 - Local Tempo, OpenTelemetry Collector, Prometheus, Grafana provisioning and alert/recording-rule examples.
 - Synthetic GPU pricing/data design. It is always labeled simulated; no GPU claim is made.
 
 ## Local run
 
 ```bash
-python -m pip install -e '.[dev]'
-make test lint
-make demo
-curl -H 'Authorization: Bearer tenant-search' http://localhost:8080/api/v1/requests/req-healthy/analysis
-make bootstrap  # optional: Grafana :3000, Prometheus :9090, Tempo :3200
+make install
+make bootstrap-local
+make smoke
+make demo-local        # real local metric, trace, analytics ingest and correlated analysis
+make demo-degradation  # latency/queue evidence with diagnosis hints
+make verify
 ```
+
+The workload fixture is intentionally deterministic and is not a model-quality, GPU-performance,
+or production-capacity claim. Raw prompts and responses are excluded from metrics, traces, and
+analytics ingestion.
 
 ## Classification
 

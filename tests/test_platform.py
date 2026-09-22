@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 from decimal import Decimal
+from uuid import uuid4
 
 from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.main import app, prices
@@ -37,3 +38,18 @@ def test_finops_efficiency_recommends_no_unsafe_capacity_cut():
     response = client.get("/api/v1/efficiency", headers={"Authorization":"Bearer finops-demo"})
     assert response.status_code == 200
     assert response.json()["state"] == "SATURATED"
+
+
+def test_only_telemetry_producer_can_ingest_metadata_event():
+    client = TestClient(app)
+    payload = event(event_id=f"live-{uuid4()}", request_id=f"request-{uuid4()}").model_dump(mode="json")
+    denied = client.post("/api/v1/usage", json=payload, headers={"Authorization": "Bearer tenant-search"})
+    accepted = client.post(
+        "/api/v1/usage", json=payload, headers={"Authorization": "Bearer telemetry-producer"}
+    )
+    duplicate = client.post(
+        "/api/v1/usage", json=payload, headers={"Authorization": "Bearer telemetry-producer"}
+    )
+    assert denied.status_code == 403
+    assert accepted.json()["accepted"] is True
+    assert duplicate.json()["accepted"] is False

@@ -11,10 +11,17 @@ PARTIALLY VALIDATED
 ## Executed and Verified
 
 - Analytics API, deterministic telemetry analysis, Decimal cost and SLO logic tests.
+- Local Docker Compose execution: deterministic AI workload fixture → metadata-only analytics ingest
+  → OTel Collector → Tempo trace and Prometheus metrics → request-level API correlation.
+- `make demo-local` verified request ID and trace ID correlation with model, tokens, latency,
+  queue/tool timing, and estimated/simulated cost. `make demo-degradation` generated latency and
+  queue evidence with diagnosis hints.
 
 ## Implemented but Not End-to-End Validated
 
-- Compose stack and dashboard/collector provisioning.
+- Grafana dashboard starts from provisioned local configuration but does not yet render useful
+  generated-data panels.
+- Durable telemetry storage/replay and request-to-trace UI links.
 
 ## Simulated
 
@@ -22,7 +29,7 @@ PARTIALLY VALIDATED
 
 ## Architecture / Contracts Only
 
-- Real OTLP-producing AI application and trace correlation.
+- Production telemetry collectors, durable warehouse, and external runtime adapters.
 
 ## Known Failures
 
@@ -30,12 +37,15 @@ PARTIALLY VALIDATED
 
 ## Current P0 Objective
 
-Generate real local OTLP/Prometheus telemetry and display it in the compose stack.
+Turn the executed telemetry path into a complete diagnosis demo: durable live events, explicit SLO
+impact, Grafana panels, and normal/degraded/cost/tool/capacity scenarios.
 
 ## Completion Blockers
 
-- No real AI telemetry producer or live OTel/Prometheus/Tempo/Grafana evidence has been executed.
-- Request correlation, generated-data SLO/error-budget effect, FinOps unit economics, and required failure scenarios are unexecuted.
+- Grafana panels have not yet been proven with generated data.
+- Live telemetry is in-memory only; persistence/recovery is unvalidated.
+- Generated-data SLO/error-budget impact and FinOps unit economics need explicit demonstrations.
+- Cost spike, tool bottleneck, and capacity saturation scenarios remain unexecuted.
 
 ## Explicitly Unexecuted Production Adapters
 
@@ -43,12 +53,15 @@ Generate real local OTLP/Prometheus telemetry and display it in the compose stac
 
 ## Last Validation
 
-- `../ai-platform-control-plane/.venv/bin/python -m pytest -q`: 4 passed (2 dependency deprecation warnings).
-- `../ai-platform-control-plane/.venv/bin/python -m ruff check analytics-api/src tests`: passed.
+- `make lint`: passed.
+- `make test`: 5 passed (2 upstream TestClient deprecation warnings).
+- `make smoke`: analytics API, demo workload, Prometheus, Tempo, and Grafana became ready.
+- `make demo-local`: passed with real local metric, OTLP trace, analytics ingestion, and correlated request analysis.
+- `make demo-degradation`: passed with real generated latency/queue telemetry and diagnosis hints.
 
 ## Last Updated
 
-2026-09-19, baseline `66a7135`.
+2026-09-22, live telemetry vertical slice in progress on `codex/week-06-ai-observability-finops`.
 
 ## Clean-Room Reproducibility
 

@@ -4,18 +4,21 @@ PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE
 
 # Current Completion Blockers
 
-- Run a telemetry producer and local OTel/Prometheus/Tempo/Grafana stack with real data.
-- Demonstrate request correlation, cost/SLO impact, and normal/degraded/cost/tool/capacity scenarios.
+- Complete durable telemetry storage/recovery, generated-data SLO/cost evidence, Grafana panels,
+  and the remaining required scenarios.
 
 # P0 — Required for Portfolio Claim
 
 P0 blocks PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE; do not select P1/P2 work first.
 
-- Build a lightweight local AI telemetry generator/runtime.
-- Emit OTLP traces and Prometheus metrics through the collector.
-- Start Compose and prove Prometheus/Tempo/Grafana receive generated data.
-- Correlate request ID, latency, tokens, model, queue/tool signal, cost and SLO in API output.
-- Exercise normal, latency, tool bottleneck, cost spike and saturation scenarios.
+- [x] Build a lightweight local AI telemetry generator/runtime.
+- [x] Emit OTLP traces and Prometheus metrics through the collector.
+- [x] Start Compose and prove Prometheus and Tempo receive generated data.
+- [x] Correlate request ID, latency, tokens, model, queue/tool signal, and estimated cost in API output.
+- [ ] Persist live telemetry and validate restart recovery without duplicate ingestion.
+- [ ] Demonstrate generated-data SLO/error-budget change and unit-economics outputs.
+- [ ] Render and verify Grafana panels from generated data.
+- [ ] Exercise cost spike, tool bottleneck, and capacity saturation scenarios.
 
 # P1 — Production Hardening
 
