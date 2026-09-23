@@ -5,6 +5,7 @@ from uuid import uuid4
 from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.main import app, prices
 from aiops.models.domain import UsageEvent
+from aiops.storage import UsageStore
 from fastapi.testclient import TestClient
 
 
@@ -53,3 +54,11 @@ def test_only_telemetry_producer_can_ingest_metadata_event():
     assert denied.status_code == 403
     assert accepted.json()["accepted"] is True
     assert duplicate.json()["accepted"] is False
+
+
+def test_usage_store_survives_service_reconstruction(tmp_path):
+    stored = event(event_id="durable-event", request_id="durable-request")
+    store = UsageStore(tmp_path / "usage.db")
+    assert store.insert(stored) is True
+    rebuilt = UsageStore(tmp_path / "usage.db")
+    assert rebuilt.list_events() == [stored]

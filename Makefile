@@ -3,7 +3,7 @@ VENV := .venv
 PY := $(VENV)/bin/python
 export PYTHONPATH := analytics-api/src
 
-.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation verify clean clean-local
+.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery verify clean clean-local
 install:
 	command -v $(PYTHON) >/dev/null || { echo "Python 3.12 is required"; exit 1; }
 	@if [ -x "$(PY)" ] && ! $(PY) -c 'import sys; assert sys.version_info[:2] == (3, 12)' >/dev/null 2>&1; then \
@@ -28,6 +28,8 @@ demo-local:
 	./scripts/demo-local.sh
 demo-degradation:
 	./scripts/demo-degradation.sh
+demo-recovery:
+	./scripts/demo-recovery.sh
 verify:
 	$(MAKE) lint
 	$(MAKE) test

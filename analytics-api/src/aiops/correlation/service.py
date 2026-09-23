@@ -4,19 +4,29 @@ from decimal import Decimal
 
 from aiops.cost.engine import CostEngine, PriceUnknown
 from aiops.models.domain import UsageEvent
+from aiops.storage import UsageStore
 
 
 class AnalyticsService:
-    def __init__(self, engine: CostEngine, usage: list[UsageEvent]):
-        self.engine, self.usage = engine, usage
-        self._seen = {item.event_id for item in usage}
+    def __init__(self, engine: CostEngine, fixture_usage: list[UsageEvent], store: UsageStore | None = None):
+        self.engine, self.store = engine, store
+        self.fixture_usage = fixture_usage
+        self.usage = [*fixture_usage, *(store.list_events() if store else [])]
+        self._seen = {item.event_id for item in self.usage}
 
     def ingest(self, event: UsageEvent) -> bool:
         if event.event_id in self._seen:
             return False
+        if self.store and not self.store.insert(event):
+            self._seen.add(event.event_id)
+            return False
         self._seen.add(event.event_id)
         self.usage.append(event)
         return True
+
+    def live_usage(self) -> list[UsageEvent]:
+        fixture_ids = {event.event_id for event in self.fixture_usage}
+        return [event for event in self.usage if event.event_id not in fixture_ids]
 
     def costs(self, tenant: str | None = None) -> dict:
         items = [event for event in self.usage if tenant is None or event.tenant_id == tenant]
@@ -41,19 +51,22 @@ class AnalyticsService:
         if event.queue_ms > event.e2e_ms * .25: hints.append("Queueing is a material part of end-to-end latency.")
         if event.tool_ms > event.e2e_ms * .5: hints.append("Tool execution dominates this request; model latency is not the primary bottleneck.")
         if event.ttft_ms > 1000: hints.append("TTFT exceeds the interactive example objective; inspect queueing and model prefill.")
-        return {"request_id": request_id, "trace_id": event.trace_id, "classification": {"cost": "estimated/simulated", "telemetry": "synthetic fixture unless OTLP ingested"},
+        telemetry_classification = "live metadata-only telemetry" if event in self.live_usage() else "synthetic fixture telemetry"
+        return {"request_id": request_id, "trace_id": event.trace_id, "classification": {"cost": "estimated/simulated", "telemetry": telemetry_classification},
                 "performance": {"e2e_ms": event.e2e_ms, "ttft_ms": event.ttft_ms, "tpot_ms": event.tpot_ms, "queue_ms": event.queue_ms, "tool_ms": event.tool_ms},
                 "usage": {"model": event.model, "deployment": event.deployment, "input_tokens": event.input_tokens, "output_tokens": event.output_tokens, "success": event.success},
-                "cost": {"estimated_total": str(request_cost), "currency": "USD"}, "diagnostic_hints": hints}
+                "cost": {"estimated_total": str(request_cost), "currency": "USD"},
+                "slo": self.slo(events=self.live_usage()), "diagnostic_hints": hints}
 
-    def slo(self, threshold_ms: int = 1000) -> dict:
-        if not self.usage: return {"name": "interactive-chat-ttft", "compliance": 1, "remaining_error_budget": 1}
-        good = sum(event.success and event.ttft_ms <= threshold_ms for event in self.usage)
-        compliance = Decimal(good) / Decimal(len(self.usage))
+    def slo(self, threshold_ms: int = 1000, events: list[UsageEvent] | None = None) -> dict:
+        items = self.usage if events is None else events
+        if not items: return {"name": "interactive-chat-ttft", "compliance": "1.0000", "remaining_error_budget": "1.0000", "bad_events": 0, "events": 0}
+        good = sum(event.success and event.ttft_ms <= threshold_ms for event in items)
+        compliance = Decimal(good) / Decimal(len(items))
         target = Decimal("0.95")
         return {"name": "interactive-chat-ttft", "target": str(target), "compliance": str(compliance.quantize(Decimal("0.0001"))),
                 "remaining_error_budget": str(max(Decimal(0), (compliance - target) / (Decimal(1) - target)).quantize(Decimal("0.0001"))),
-                "bad_events": len(self.usage) - good}
+                "bad_events": len(items) - good, "events": len(items)}
 
     def efficiency(self) -> dict:
         if not self.usage: return {"state": "HEALTHY", "recommendations": []}

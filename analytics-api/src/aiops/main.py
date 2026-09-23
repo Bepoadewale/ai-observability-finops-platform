@@ -7,12 +7,15 @@ from pathlib import Path
 from aiops.correlation.service import AnalyticsService
 from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.models.domain import Budget, PricingEntry, UsageEvent
+from aiops.storage import UsageStore
 from fastapi import Depends, FastAPI, Header, HTTPException
 
 ROOT = Path(os.getenv("AIOPS_FIXTURES_DIR", Path(__file__).parents[3] / "fixtures"))
 prices = [PricingEntry.model_validate(item) for item in json.loads((ROOT / "prices.json").read_text())]
 events = [UsageEvent.model_validate(item) for item in json.loads((ROOT / "golden-events.json").read_text())]
-service = AnalyticsService(CostEngine(PriceCatalog(prices)), events)
+service = AnalyticsService(
+    CostEngine(PriceCatalog(prices)), events, UsageStore(os.getenv("AIOPS_DB", ".local/analytics.db"))
+)
 budgets: list[Budget] = []
 app = FastAPI(title="AI Observability + FinOps Platform", version="0.1.0")
 
@@ -68,9 +71,9 @@ def request_analysis(request_id: str, identity=Depends(principal)):
     return analysis
 
 @app.get("/api/v1/slo")
-def slo(identity=Depends(principal)):  # auth keeps SLO signals from becoming an anonymous data source
+def slo(live_only: bool = False, identity=Depends(principal)):  # auth keeps SLO signals from becoming an anonymous data source
     scoped_tenant(identity)
-    return service.slo()
+    return service.slo(events=service.live_usage()) if live_only else service.slo()
 
 @app.get("/api/v1/efficiency")
 def efficiency(identity=Depends(principal)):
