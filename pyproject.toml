@@ -2,7 +2,17 @@
 name = "ai-observability-finops-platform"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "pydantic>=2.9,<3", "prometheus-client>=0.21,<1"]
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+  "pydantic>=2.9,<3",
+  "prometheus-client>=0.21,<1",
+  "httpx>=0.27,<1",
+  "opentelemetry-api>=1.30,<2",
+  "opentelemetry-sdk>=1.30,<2",
+  "opentelemetry-exporter-otlp-proto-http>=1.30,<2",
+  "opentelemetry-instrumentation-fastapi>=0.51b0,<1",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3,<9", "httpx>=0.27,<1", "ruff>=0.8,<1"]

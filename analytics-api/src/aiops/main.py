@@ -1,25 +1,35 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from aiops.correlation.service import AnalyticsService
 from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.models.domain import Budget, PricingEntry, UsageEvent
+from aiops.storage import UsageStore
 from fastapi import Depends, FastAPI, Header, HTTPException
 
-ROOT = Path(__file__).parents[3]
-prices = [PricingEntry.model_validate(item) for item in json.loads((ROOT / "fixtures/prices.json").read_text())]
-events = [UsageEvent.model_validate(item) for item in json.loads((ROOT / "fixtures/golden-events.json").read_text())]
-service = AnalyticsService(CostEngine(PriceCatalog(prices)), events)
+ROOT = Path(os.getenv("AIOPS_FIXTURES_DIR", Path(__file__).parents[3] / "fixtures"))
+prices = [PricingEntry.model_validate(item) for item in json.loads((ROOT / "prices.json").read_text())]
+events = [UsageEvent.model_validate(item) for item in json.loads((ROOT / "golden-events.json").read_text())]
+service = AnalyticsService(
+    CostEngine(PriceCatalog(prices)), events, UsageStore(os.getenv("AIOPS_DB", ".local/analytics.db"))
+)
 budgets: list[Budget] = []
 app = FastAPI(title="AI Observability + FinOps Platform", version="0.1.0")
 
 
 def principal(authorization: str = Header(...)) -> tuple[str, str]:
     # Demo auth only: maps opaque local tokens to scopes; no tenant header is trusted.
-    tokens = {"Bearer tenant-search": ("tenant", "team-search"), "Bearer tenant-payments": ("tenant", "team-payments"), "Bearer finops-demo": ("finops", "*")}
-    if authorization not in tokens: raise HTTPException(401, "invalid credentials")
+    tokens = {
+        "Bearer tenant-search": ("tenant", "team-search"),
+        "Bearer tenant-payments": ("tenant", "team-payments"),
+        "Bearer finops-demo": ("finops", "*"),
+        "Bearer telemetry-producer": ("producer", "*"),
+    }
+    if authorization not in tokens:
+        raise HTTPException(401, "invalid credentials")
     return tokens[authorization]
 
 
@@ -46,6 +56,14 @@ def usage(identity=Depends(principal)):
     data = [item for item in service.usage if tenant is None or item.tenant_id == tenant]
     return {"events": [item.model_dump(mode="json") for item in data], "classification": "synthetic demo telemetry"}
 
+
+@app.post("/api/v1/usage")
+def ingest_usage(event: UsageEvent, identity=Depends(principal)):
+    """Accept idempotent, metadata-only usage from the local demo AI workload."""
+    if identity[0] != "producer":
+        raise HTTPException(403, "telemetry producer role required")
+    return {"accepted": service.ingest(event), "event_id": event.event_id}
+
 @app.get("/api/v1/requests/{request_id}/analysis")
 def request_analysis(request_id: str, identity=Depends(principal)):
     analysis = service.analysis(request_id)
@@ -53,14 +71,24 @@ def request_analysis(request_id: str, identity=Depends(principal)):
     return analysis
 
 @app.get("/api/v1/slo")
-def slo(identity=Depends(principal)):  # auth keeps SLO signals from becoming an anonymous data source
+def slo(live_only: bool = False, identity=Depends(principal)):  # auth keeps SLO signals from becoming an anonymous data source
     scoped_tenant(identity)
-    return service.slo()
+    return service.slo(events=service.live_usage()) if live_only else service.slo()
 
 @app.get("/api/v1/efficiency")
-def efficiency(identity=Depends(principal)):
+def efficiency(live_only: bool = False, identity=Depends(principal)):
     if identity[0] != "finops": raise HTTPException(403, "finops role required")
-    return service.efficiency()
+    return service.efficiency(service.live_usage()) if live_only else service.efficiency()
+
+@app.get("/api/v1/unit-economics")
+def unit_economics(live_only: bool = True, identity=Depends(principal)):
+    if identity[0] != "finops": raise HTTPException(403, "finops role required")
+    return service.unit_economics(service.live_usage()) if live_only else service.unit_economics()
+
+@app.get("/api/v1/recommendations")
+def recommendations(live_only: bool = True, identity=Depends(principal)):
+    if identity[0] != "finops": raise HTTPException(403, "finops role required")
+    return service.recommendations(service.live_usage()) if live_only else service.recommendations()
 
 @app.get("/api/v1/budgets")
 def list_budgets(identity=Depends(principal)):

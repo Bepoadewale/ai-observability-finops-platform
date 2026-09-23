@@ -1,1 +1,50 @@
-{"editable":true,"panels":[{"type":"text","title":"AI Platform Health","options":{"content":"## Local dashboard\nTelemetry and costs are clearly classified as real, estimated, or simulated.","mode":"markdown"}}],"schemaVersion":41,"title":"AI Platform Health (Local)","version":1}
+{
+  "uid": "ai-platform-health-local",
+  "title": "AI Platform Health (Local)",
+  "tags": ["ai", "local-demo", "telemetry"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Requests by tenant",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (tenant) (rate(ai_requests_total[1m]))", "legendFormat": "{{tenant}}"}],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "p95 time to first token",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le) (rate(ai_request_ttft_seconds_bucket[1m])))", "legendFormat": "p95 TTFT"}],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Queue duration by scenario",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le, scenario) (rate(ai_request_queue_seconds_bucket[1m])))", "legendFormat": "{{scenario}}"}],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Output tokens observed",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum(ai_request_tokens_total{type=\"output\"})", "legendFormat": "output tokens"}],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+    },
+    {
+      "id": 5,
+      "type": "text",
+      "title": "Evidence boundary",
+      "options": {"mode": "markdown", "content": "**Measured locally:** request metrics and OTLP traces.  \\n**Estimated:** versioned model-token costs.  \\n**Simulated:** GPU-cost component; no GPU utilization is claimed."},
+      "gridPos": {"h": 5, "w": 24, "x": 0, "y": 16}
+    }
+  ]
+}

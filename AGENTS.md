@@ -4,7 +4,10 @@ Mission: correlate real local AI telemetry, reliability signals and cost estimat
 
 Stack: Python 3.12, FastAPI, OTel Collector, Prometheus, Tempo, Grafana, Docker Compose.
 
-Commands: `make test`, `make lint`, `make demo`, `make bootstrap`; use `docker compose ps/logs` for stack proof.
+Commands: `make install`, `make bootstrap-local`, `make smoke`, `make demo-local`,
+`make demo-degradation`, `make demo-cost-spike`, `make demo-tool-bottleneck`,
+`make demo-saturation`, `make demo-dashboard`, `make demo-recovery`, `make verify`, and
+`make clean-local`. Use `docker compose ps/logs` for stack proof.
 
 Rules: label synthetic GPU data simulated; distinguish measured, estimated and forecast cost; never fabricate dashboards/telemetry; no secrets/main pushes; update status/backlog after validation.
 
