@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from uuid import uuid4
 
+from aiops.correlation.service import AnalyticsService
 from aiops.cost.engine import CostEngine, PriceCatalog
 from aiops.main import app, prices
 from aiops.models.domain import UsageEvent
@@ -62,3 +63,16 @@ def test_usage_store_survives_service_reconstruction(tmp_path):
     assert store.insert(stored) is True
     rebuilt = UsageStore(tmp_path / "usage.db")
     assert rebuilt.list_events() == [stored]
+
+
+def test_live_unit_economics_and_recommendations_are_evidence_based(tmp_path):
+    live = event(event_id="live-cost", request_id="live-cost-request", output_tokens=8_000, queue_ms=900,
+                 ttft_ms=1_600, e2e_ms=2_600, agent_run_id="workflow-local")
+    service = AnalyticsService(CostEngine(PriceCatalog(prices)), [], UsageStore(tmp_path / "usage.db"))
+    assert service.ingest(live)
+    economics = service.unit_economics(service.live_usage())
+    assert economics["by_tenant"]["team-search"] != "0.000000"
+    assert economics["by_agent_workflow"]["workflow-local"] != "0.000000"
+    recommendations = service.recommendations(service.live_usage())
+    assert recommendations["capacity"]["state"] == "SATURATED"
+    assert recommendations["anomalies"]

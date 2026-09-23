@@ -40,6 +40,7 @@ class CompletionRequest(BaseModel):
     model: str = "llama-small"
     prompt: str = Field(min_length=1, max_length=512)
     scenario: str = Field(default="normal", pattern="^(normal|latency|tool_bottleneck|cost_spike|saturation)$")
+    agent_run_id: str | None = Field(default=None, max_length=128)
 
 
 SCENARIOS = {
@@ -108,6 +109,7 @@ async def complete(request: CompletionRequest) -> dict:
             "queue_ms": profile["queue_ms"],
             "tool_ms": profile["tool_ms"],
             "success": profile["success"],
+            "agent_run_id": request.agent_run_id,
         }
         try:
             async with httpx.AsyncClient(timeout=3) as client:

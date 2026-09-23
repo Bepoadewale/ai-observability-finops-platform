@@ -76,9 +76,19 @@ def slo(live_only: bool = False, identity=Depends(principal)):  # auth keeps SLO
     return service.slo(events=service.live_usage()) if live_only else service.slo()
 
 @app.get("/api/v1/efficiency")
-def efficiency(identity=Depends(principal)):
+def efficiency(live_only: bool = False, identity=Depends(principal)):
     if identity[0] != "finops": raise HTTPException(403, "finops role required")
-    return service.efficiency()
+    return service.efficiency(service.live_usage()) if live_only else service.efficiency()
+
+@app.get("/api/v1/unit-economics")
+def unit_economics(live_only: bool = True, identity=Depends(principal)):
+    if identity[0] != "finops": raise HTTPException(403, "finops role required")
+    return service.unit_economics(service.live_usage()) if live_only else service.unit_economics()
+
+@app.get("/api/v1/recommendations")
+def recommendations(live_only: bool = True, identity=Depends(principal)):
+    if identity[0] != "finops": raise HTTPException(403, "finops role required")
+    return service.recommendations(service.live_usage()) if live_only else service.recommendations()
 
 @app.get("/api/v1/budgets")
 def list_budgets(identity=Depends(principal)):
