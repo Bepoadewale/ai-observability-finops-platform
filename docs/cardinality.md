@@ -1,3 +1,11 @@
 # Cardinality
 
-Do not label Prometheus metrics with request IDs, trace IDs, users, prompts or sessions. Those identifiers belong in traces or logs. Bounded labels such as model, deployment, tenant tier and outcome support aggregation without destabilizing the metrics backend.
+Prometheus labels are intentionally bounded:
+
+- request counter: tenant and outcome;
+- token counter and latency histograms: model/type;
+- queue and tool histograms: deterministic scenario.
+
+Request IDs, trace IDs, users, prompts, sessions, and arbitrary error payloads are never labels.
+Request/trace IDs belong in the trace and the protected analytics API correlation path. This keeps
+the local demonstration representative of a cardinality-safe measurement design.
