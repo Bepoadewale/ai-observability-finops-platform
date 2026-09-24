@@ -74,6 +74,11 @@ The API uses intentionally non-secret local fixture tokens: `tenant-search`, `te
 `finops-demo`, and `telemetry-producer`. They demonstrate API scopes only and must never be used
 outside local development.
 
+On a pristine local bootstrap, Grafana uses its disposable `admin` / `admin` account and prompts for
+a password change. `make demo-dashboard` verifies dashboard provisioning through Grafana's API with
+that clean-bootstrap credential. If you change the password for an interactive session, reset the
+project with `make clean-local` and `make bootstrap-local` before rerunning that scripted check.
+
 ## What the demos prove
 
 - `demo-local`: real local request → OTLP trace, Prometheus metric, durable metadata-only usage,

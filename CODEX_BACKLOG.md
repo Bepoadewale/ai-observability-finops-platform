@@ -23,6 +23,8 @@ blocker exists.
 
 # P1 — Production Hardening
 
+- Make Grafana dashboard validation accept an explicitly configured local API credential after an
+  interactive user changes the disposable clean-bootstrap password.
 - Add authenticated production identity and tenant-scoped durable storage migration strategy.
 - Add alert delivery and dashboard regression tests.
 - Add a supported production telemetry-warehouse adapter and retention controls.
