@@ -40,7 +40,10 @@ None within the local-first completion scope.
 
 ## Known Failures
 
-None. `pytest` emits one upstream `TestClient` deprecation warning.
+None within the completion path. `pytest` emits one upstream `TestClient` deprecation warning.
+After an interactive Grafana password change, `make demo-dashboard` requires a clean local reset
+because its API assertion uses the disposable clean-bootstrap credential; configurable credentials
+are tracked as P1 developer-experience hardening.
 
 ## Current P0 Objective
 

@@ -36,6 +36,15 @@ make verify
 See `docs/demo.md` for what each command asserts. Use `docker compose ps` and `docker compose logs`
 when a dependency does not become ready.
 
+### Grafana local credential note
+
+Grafana starts with the disposable local `admin` / `admin` account and asks the browser user to
+change it. The non-interactive `make demo-dashboard` check uses the clean-bootstrap credential to
+query Grafana's API. After manually changing the password, reset the project with `make clean-local`
+followed by `make bootstrap-local` before using that scripted check again. Configurable dashboard API
+credentials are tracked as P1 developer-experience hardening; this behavior does not affect the
+executed clean-room validation.
+
 ## Safe cleanup
 
 ```bash
