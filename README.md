@@ -70,6 +70,10 @@ After `make bootstrap-local`, the local services are reachable at:
 | Tempo | `http://localhost:3200` | trace query API |
 | Grafana | `http://localhost:3000` | provisioned AI Platform dashboard |
 
+### Temporary public dashboard
+
+Run `make public-demo` to bootstrap the stack, generate local telemetry, and print a temporary Cloudflare Quick Tunnel URL for Grafana. No Cloudflare account, named tunnel, or persistent credential is used. The URL is public, disposable, changes every run, and must never be committed; use it only with the local fixture data. `Ctrl-C` stops only the tunnel and `make clean-local` removes project-owned resources.
+
 The API uses intentionally non-secret local fixture tokens: `tenant-search`, `tenant-payments`,
 `finops-demo`, and `telemetry-producer`. They demonstrate API scopes only and must never be used
 outside local development.
