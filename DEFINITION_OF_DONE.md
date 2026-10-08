@@ -9,6 +9,7 @@ Cloud readiness requires a plain-English cloud story, icon-based architecture, s
 - [x] Separate state/lock/budget and private VPC/EKS/ECR/RDS/S3 Terraform contracts validate statically.
 - [x] Static workload contracts define IRSA, secret references, non-root security, probes, limits, PDB, and default-deny network policy.
 - [x] Static delivery contracts define immutable ECR images, Argo CD ownership, External Secrets references, and a narrow internal ALB route.
+- [x] Static observability/reliability contracts define sanitized telemetry, alert rules, Pod-loss/bad-image recovery drills, bounded load, and cost-query design.
 - [ ] Replace the temporary primary architecture diagram with official AWS Architecture Icons before the cloud design gate is review-ready.
 - [ ] Implement and execute PostgreSQL storage, secret delivery, EKS/GitOps runtime, observability, failure, and teardown proof before claiming cloud-pilot execution.
 

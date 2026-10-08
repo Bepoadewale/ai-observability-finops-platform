@@ -19,6 +19,16 @@ with one upstream `TestClient` deprecation warning. These checks validate HCL an
 checked-in workload and delivery contracts only. They did not authenticate to AWS, create
 a resource, run a Terraform plan, or prove a cloud runtime.
 
+## Cloud observability/reliability contract validation
+
+**Date:** 2026-10-08. `make cloud-observability-contracts-validate` passed (8 static
+contract tests). `make kustomize-validate`, `make terraform-validate`, `make lint`,
+`make test` (15 passed, one upstream `TestClient` deprecation warning), and
+`docker compose config --quiet` also passed. These checks validate the planned sanitized
+telemetry, alerts, bounded load, failure recovery, and cost-evidence interfaces. No AWS
+credentials, Cost Explorer query, Kubernetes cluster, load test, alert, or cloud telemetry
+was used.
+
 ## Clean-Room Validation
 
 **Date:** 2026-09-23

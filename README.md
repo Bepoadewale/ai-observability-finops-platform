@@ -15,6 +15,10 @@ local Terraform and contract checks, but has not been planned or applied to AWS.
 [cloud security and state design](docs/cloud-security.md) and
 [cloud delivery design](docs/cloud-delivery.md).
 
+The static cloud contract also defines private telemetry, alert, recovery, bounded-load,
+and AWS cost-evidence checks. They are not yet AWS evidence. See
+[cloud observability and reliability](docs/cloud-observability.md).
+
 An independently runnable measurement and financial-control layer for AI systems. It correlates request performance, model token use, inferred queue/tool bottlenecks, SLO state, tenant attribution, and versioned-price cost estimates.
 
 It complements the portfolio: Project 1 governs infrastructure, Project 2 serves models, Project 3 executes agents safely; this project measures reliability, efficiency, and economics across them.

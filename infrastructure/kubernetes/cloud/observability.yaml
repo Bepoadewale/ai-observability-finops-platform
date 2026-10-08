@@ -1,0 +1,81 @@
+# These Prometheus Operator resources are applied only after the operator and the
+# private observability stack are ready. They are contracts, not live cloud evidence.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: demo-ai
+  namespace: ai-observability
+  labels:
+    release: observability
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: demo-ai
+  endpoints:
+    - port: metrics
+      interval: 15s
+      path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ai-platform-slo
+  namespace: ai-observability
+  labels:
+    release: observability
+spec:
+  groups:
+    - name: ai-platform-cloud
+      rules:
+        - record: ai:ttft:p95_seconds
+          expr: histogram_quantile(0.95, sum(rate(ai_request_ttft_seconds_bucket[5m])) by (le, model))
+        - alert: AIPlatformHighTTFT
+          expr: ai:ttft:p95_seconds > 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Illustrative AI request TTFT objective breached"
+            runbook: "docs/runbooks/high-ttft.md"
+        - alert: AIPlatformTelemetryTargetMissing
+          expr: absent(up{job="demo-ai"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "The expected AI telemetry target is absent"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-cloud
+  namespace: ai-observability
+data:
+  config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc: {}
+          http: {}
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 256
+      attributes/sanitize:
+        actions:
+          - key: gen_ai.prompt
+            action: delete
+          - key: gen_ai.response.content
+            action: delete
+      batch: {}
+    exporters:
+      otlp/tempo:
+        endpoint: REPLACED_BY_PRIVATE_TEMPO_SERVICE_AT_DEPLOY_TIME:4317
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, attributes/sanitize, batch]
+          exporters: [otlp/tempo]

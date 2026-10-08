@@ -59,3 +59,22 @@ def test_cloud_delivery_never_commits_secret_values_or_mutable_image_tags():
     assert "database-url" in secret
     assert "postgres://" not in secret
     assert "REPLACED_BY_IMMUTABLE_ECR_DIGEST_AT_DEPLOY_TIME" in deployment
+
+
+def test_observability_contract_has_sanitization_alerts_and_bounded_load():
+    manifest = (ROOT / "infrastructure/kubernetes/cloud/observability.yaml").read_text()
+    load = (ROOT / "infrastructure/load/cloud-bounded-load.js").read_text()
+    assert "gen_ai.prompt" in manifest
+    assert "gen_ai.response.content" in manifest
+    assert "AIPlatformHighTTFT" in manifest
+    assert "AIPlatformTelemetryTargetMissing" in manifest
+    assert "vus: 2" in load
+    assert "duration: '2m'" in load
+
+
+def test_reliability_and_cost_scripts_are_bounded_and_read_only_by_design():
+    ha = (ROOT / "scripts/cloud-verify-ha.sh").read_text()
+    cost = (ROOT / "scripts/cloud-cost-evidence.sh").read_text()
+    assert "--timeout=180s" in ha
+    assert "get-cost-and-usage" in cost
+    assert "aws ce" in cost
