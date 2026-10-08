@@ -15,6 +15,9 @@ Cloud-pilot rule: Terraform is the only future AWS create/destroy authority. Kee
 plans, applies, smoke tests, failures, cost queries, and teardown evidence separate;
 never call a diagram or plan executed cloud evidence. Write docs in plain English first.
 
+Cloud architecture rule: keep the primary AWS diagram as a checked-in SVG with its
+source and official-icon attribution before claiming the cloud design is review-ready.
+
 Completion rule: do not mark **PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE** unless `DEFINITION_OF_DONE.md` has executed evidence. Analytics code, fixture telemetry, Compose manifests, mocked tests, and dashboards without live data are insufficient. The AI request → telemetry → correlation → cost/SLO story must run locally; cloud/GPU adapters remain explicit.
 
 ## Clean-room reproducibility

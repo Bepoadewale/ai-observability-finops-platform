@@ -4,6 +4,9 @@
 
 Cloud readiness requires a plain-English cloud story, icon-based architecture, separate Terraform state/lock/budget design, private runtime/security boundaries, delivery, observability/failure design, OIDC CI controls, and an exact evidence/teardown runbook. None of these count as AWS execution until a guarded Terraform create → validate → destroy pilot is recorded.
 
+- [x] Cloud inventory identifies the local proof and cloud gaps.
+- [ ] Plain-English cloud story, official-icon SVG/source/attribution, trust boundary, and operations/evolution docs are reviewed.
+
 # Portfolio Complete — Local-First Scope Gate
 
 - [x] A working local AI application/runtime generates real OTLP traces and Prometheus metrics.

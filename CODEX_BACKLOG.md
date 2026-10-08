@@ -8,8 +8,9 @@ None within local-first scope. Do not reopen a completion claim without new exec
 
 # Cloud-Pilot Readiness
 
-- [ ] CP0: record cloud inventory and evidence boundary.
-- [ ] CP1–CP6: complete the staged cloud-pilot program; no AWS apply until separately authorized.
+- [x] CP0: record cloud inventory and evidence boundary.
+- [ ] CP1: add plain-English cloud story, icon-based AWS architecture, trust boundary, and governance links.
+- [ ] CP2–CP6: complete the staged cloud-pilot program; no AWS apply until separately authorized.
 
 # P0 — Required for Portfolio Claim
 

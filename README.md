@@ -1,5 +1,14 @@
 # AI Observability + FinOps Platform
 
+**Cloud-pilot direction:** this completed local platform will become a private AWS
+observability pilot. Terraform—not manual console changes—will create and remove its
+resources. The planned cloud version keeps telemetry and data stores private; any
+browser access will be limited to the analytics API/dashboard path. No AWS resource or
+Terraform plan has run yet.
+
+See the [cloud-pilot inventory](docs/cloud-pilot-inventory.md) for what will be added
+and what remains unexecuted.
+
 An independently runnable measurement and financial-control layer for AI systems. It correlates request performance, model token use, inferred queue/tool bottlenecks, SLO state, tenant attribution, and versioned-price cost estimates.
 
 It complements the portfolio: Project 1 governs infrastructure, Project 2 serves models, Project 3 executes agents safely; this project measures reliability, efficiency, and economics across them.
