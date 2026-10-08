@@ -22,3 +22,14 @@ Kubernetes, and secrets will not be public.
 The cloud pilot must prove the same story that already runs locally: request ID →
 trace → metric → tenant/model/token metadata → cost/SLO explanation. GPU cost remains
 simulated until real hardware telemetry is measured.
+
+## Planned security and state boundary
+
+Terraform now contains a static pilot contract for a private VPC, private EKS endpoint,
+immutable ECR repository, encrypted RDS PostgreSQL, encrypted evidence bucket, Secrets
+Manager container, and a narrow Pod IAM role. Kubernetes manifests describe two secured
+analytics API replicas, a disruption budget, and default-deny network policies.
+
+This is not a cloud execution claim. The current service still uses SQLite locally, so a
+PostgreSQL storage adapter must be implemented before an AWS pilot can prove durable cloud
+state. See [cloud security and state design](cloud-security.md).

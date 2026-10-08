@@ -6,7 +6,9 @@ PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE
 
 ## Cloud-Pilot Readiness
 
-FOUNDATION. The cloud inventory exists; no AWS design, Terraform, plan, or resource exists yet.
+PARTIALLY VALIDATED. The cloud design, Terraform contracts, and static workload-security
+checks exist. No AWS account-authenticated plan, resource, workload, or cloud telemetry
+has run.
 
 ## Maturity Model
 
@@ -63,6 +65,7 @@ None for `PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE`.
 - Real GPU/DCGM hardware telemetry.
 - Kubernetes/EKS, cloud-hosted models, and managed observability.
 - Enterprise identity and production data warehouse integrations.
+- AWS pilot runtime, PostgreSQL storage adapter, External Secrets delivery, and EKS execution.
 
 ## Last Validation
 

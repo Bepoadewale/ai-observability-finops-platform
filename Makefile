@@ -3,7 +3,7 @@ VENV := .venv
 PY := $(VENV)/bin/python
 export PYTHONPATH := analytics-api/src
 
-.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate
+.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate cloud-contracts-validate
 install:
 	command -v $(PYTHON) >/dev/null || { echo "Python 3.12 is required"; exit 1; }
 	@if [ -x "$(PY)" ] && ! $(PY) -c 'import sys; assert sys.version_info[:2] == (3, 12)' >/dev/null 2>&1; then \
@@ -53,3 +53,8 @@ public-demo:
 terraform-validate:
 	terraform -chdir=infrastructure/terraform/bootstrap init -backend=false
 	terraform -chdir=infrastructure/terraform/bootstrap validate
+	terraform -chdir=infrastructure/terraform/pilot init -backend=false
+	terraform -chdir=infrastructure/terraform/pilot validate
+
+cloud-contracts-validate:
+	$(PY) -m pytest -q tests/test_cloud_contracts.py
