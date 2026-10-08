@@ -20,6 +20,7 @@ They do not claim cloud execution.
 | IRSA, Secrets Manager, workload hardening, NetworkPolicies | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | checked-in static contracts and `tests/test_cloud_contracts.py` |
 | ECR digest, Argo CD, External Secrets, internal ALB delivery path | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | static contracts only; no controller or EKS run |
 | Cloud OTel/Prometheus/Tempo/Grafana, alert, HA, load, cost query | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | static contracts only; no cloud telemetry or billing evidence |
+| GitHub OIDC plan/apply/destroy workflow and cloud operator commands | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | confirmation-gated contracts only; no GitHub-to-AWS session |
 | PostgreSQL application storage adapter | 📋 ROADMAP | current application uses local SQLite only |
 | Production warehouse/cloud providers | 📐 ARCHITECTURE / CONTRACT ONLY | not executed |
 

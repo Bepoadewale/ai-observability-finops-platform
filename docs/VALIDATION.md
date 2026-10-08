@@ -29,6 +29,16 @@ telemetry, alerts, bounded load, failure recovery, and cost-evidence interfaces.
 credentials, Cost Explorer query, Kubernetes cluster, load test, alert, or cloud telemetry
 was used.
 
+## Cloud CI/CD and operator contract validation
+
+**Date:** 2026-10-08. `bash -n` passed for the cloud scripts.
+`make pilot-cloud-validate`, `make lint`, `make test` (17 passed, one upstream
+`TestClient` deprecation warning), and `docker compose config --quiet` passed. The CI
+workflow now runs the same static cloud checks plus a Docker image build. These checks do
+not use AWS credentials or run the manual GitHub OIDC workflow. No Terraform
+plan/apply/destroy, image push, EKS bootstrap, cloud smoke test, or cloud teardown has
+occurred.
+
 ## Clean-Room Validation
 
 **Date:** 2026-09-23

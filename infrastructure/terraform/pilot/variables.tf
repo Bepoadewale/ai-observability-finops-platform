@@ -39,6 +39,12 @@ variable "db_instance_class" {
   default     = "db.t4g.micro"
 }
 
+variable "rds_deletion_protection" {
+  description = "Keep true except during a reviewed Terraform destroy of the short-lived pilot."
+  type        = bool
+  default     = true
+}
+
 variable "monthly_budget_usd" {
   description = "Budget guardrail also used by the bootstrap root."
   type        = number

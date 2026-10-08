@@ -61,6 +61,7 @@ module "data" {
   private_subnet_ids   = module.vpc.private_subnet_ids
   private_subnet_cidrs = module.vpc.private_subnet_cidrs
   db_instance_class    = var.db_instance_class
+  deletion_protection  = var.rds_deletion_protection
 }
 
 module "workload_identity" {
