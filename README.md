@@ -19,6 +19,10 @@ The static cloud contract also defines private telemetry, alert, recovery, bound
 and AWS cost-evidence checks. They are not yet AWS evidence. See
 [cloud observability and reliability](docs/cloud-observability.md).
 
+Future cloud operators will use Terraform plan/apply/destroy commands and a
+confirmation-gated GitHub OIDC workflow. The commands are documented in
+[cloud operations](docs/cloud-operations.md); no AWS account has run them yet.
+
 An independently runnable measurement and financial-control layer for AI systems. It correlates request performance, model token use, inferred queue/tool bottlenecks, SLO state, tenant attribution, and versioned-price cost estimates.
 
 It complements the portfolio: Project 1 governs infrastructure, Project 2 serves models, Project 3 executes agents safely; this project measures reliability, efficiency, and economics across them.

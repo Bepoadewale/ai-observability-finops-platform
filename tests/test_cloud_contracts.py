@@ -78,3 +78,22 @@ def test_reliability_and_cost_scripts_are_bounded_and_read_only_by_design():
     assert "--timeout=180s" in ha
     assert "get-cost-and-usage" in cost
     assert "aws ce" in cost
+
+
+def test_cloud_operator_commands_require_account_and_explicit_confirmations():
+    script = (ROOT / "scripts/pilot-cloud.sh").read_text()
+    makefile = (ROOT / "Makefile").read_text()
+    workflow = (ROOT / ".github/workflows/cloud-pilot.yml").read_text()
+    assert "require_account" in script
+    assert "CONFIRM_APPLY" in script
+    assert "CONFIRM_DESTROY" in script
+    assert "pilot-cloud-destroy" in makefile
+    assert "id-token: write" in workflow
+    assert "AWS_PILOT_OIDC_ROLE_ARN" in workflow
+
+
+def test_cloud_ci_validates_static_contracts_without_aws_credentials():
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text()
+    assert "cloud-contracts:" in workflow
+    assert "pilot-cloud-validate" in workflow
+    assert "docker build" in workflow

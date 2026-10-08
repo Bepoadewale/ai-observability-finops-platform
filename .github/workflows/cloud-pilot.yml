@@ -1,0 +1,69 @@
+name: cloud-pilot
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Choose a reviewed cloud action."
+        required: true
+        type: choice
+        options: [plan, apply, destroy]
+      confirmation:
+        description: "For apply use APPLY_FINOPS_PILOT; for destroy use DESTROY_FINOPS_PILOT."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  cloud-pilot:
+    name: ${{ inputs.operation }}
+    runs-on: ubuntu-latest
+    environment: aws-pilot
+    # The environment must require human reviewers before apply or destroy is available.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_PILOT_OIDC_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Refuse an empty role or account configuration
+        env:
+          EXPECTED_AWS_ACCOUNT_ID: ${{ vars.EXPECTED_AWS_ACCOUNT_ID }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE }}
+          BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+        run: |
+          test -n "$EXPECTED_AWS_ACCOUNT_ID"
+          test -n "$TF_STATE_BUCKET"
+          test -n "$TF_LOCK_TABLE"
+          test -n "$BUDGET_ALERT_EMAIL"
+      - name: Terraform plan
+        if: inputs.operation == 'plan'
+        env:
+          EXPECTED_AWS_ACCOUNT_ID: ${{ vars.EXPECTED_AWS_ACCOUNT_ID }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE }}
+          BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+        run: make pilot-cloud-plan
+      - name: Confirmation-gated Terraform apply
+        if: inputs.operation == 'apply'
+        env:
+          CONFIRM_APPLY: ${{ inputs.confirmation }}
+          EXPECTED_AWS_ACCOUNT_ID: ${{ vars.EXPECTED_AWS_ACCOUNT_ID }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE }}
+          BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+        run: make pilot-cloud-apply
+      - name: Confirmation-gated Terraform destroy
+        if: inputs.operation == 'destroy'
+        env:
+          CONFIRM_DESTROY: ${{ inputs.confirmation }}
+          EXPECTED_AWS_ACCOUNT_ID: ${{ vars.EXPECTED_AWS_ACCOUNT_ID }}
+          TF_STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+          TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE }}
+          BUDGET_ALERT_EMAIL: ${{ vars.BUDGET_ALERT_EMAIL }}
+        run: make pilot-cloud-destroy

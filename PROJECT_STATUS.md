@@ -10,7 +10,8 @@ PARTIALLY VALIDATED. The cloud design, Terraform contracts, and static workload-
 checks exist. Static GitOps, immutable-image, secret-reference, and internal-ingress
 contracts also exist. Static telemetry/alert, failure recovery, bounded-load, and cost
 query contracts also exist. No AWS account-authenticated plan, resource, workload, or
-cloud telemetry has run.
+cloud telemetry has run. GitHub OIDC workflow and operator command contracts exist but
+have not authenticated to AWS.
 
 ## Maturity Model
 

@@ -3,7 +3,7 @@ VENV := .venv
 PY := $(VENV)/bin/python
 export PYTHONPATH := analytics-api/src
 
-.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate cloud-contracts-validate kustomize-validate cloud-observability-contracts-validate
+.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate cloud-contracts-validate kustomize-validate cloud-observability-contracts-validate pilot-guardrails-plan pilot-cloud-plan pilot-cloud-apply pilot-cloud-push-image pilot-cloud-bootstrap-runtime pilot-cloud-smoke pilot-cloud-validate pilot-cloud-destroy
 install:
 	command -v $(PYTHON) >/dev/null || { echo "Python 3.12 is required"; exit 1; }
 	@if [ -x "$(PY)" ] && ! $(PY) -c 'import sys; assert sys.version_info[:2] == (3, 12)' >/dev/null 2>&1; then \
@@ -65,3 +65,27 @@ kustomize-validate:
 
 cloud-observability-contracts-validate:
 	$(PY) -m pytest -q tests/test_cloud_contracts.py
+
+pilot-guardrails-plan:
+	./scripts/pilot-cloud.sh guardrails-plan
+
+pilot-cloud-plan:
+	./scripts/pilot-cloud.sh plan
+
+pilot-cloud-apply:
+	./scripts/pilot-cloud.sh apply
+
+pilot-cloud-push-image:
+	./scripts/pilot-cloud.sh push-image
+
+pilot-cloud-bootstrap-runtime:
+	./scripts/pilot-cloud.sh bootstrap-runtime
+
+pilot-cloud-smoke:
+	./scripts/pilot-cloud.sh smoke
+
+pilot-cloud-validate:
+	./scripts/pilot-cloud.sh validate
+
+pilot-cloud-destroy:
+	./scripts/pilot-cloud.sh destroy

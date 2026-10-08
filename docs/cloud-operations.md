@@ -27,3 +27,42 @@ Before an Argo CD sync, confirm the ECR image digest, workload IAM role, Externa
 status, database migration, and health endpoint. Wait on each component's readiness
 condition with a bounded timeout. Do not use fixed sleep commands or `kubectl apply` as a
 replacement for the reviewed GitOps path.
+
+## Future operator commands
+
+These commands are present now so a future pilot has one predictable path. They refuse
+to run in the wrong AWS account and apply/destroy require exact confirmation text. They
+are unexecuted contracts, not proof that the pilot exists.
+
+```bash
+# Read-only planning. Set these values outside Git.
+export AWS_PROFILE=<operator-profile>
+export EXPECTED_AWS_ACCOUNT_ID=<account-id>
+export TF_STATE_BUCKET=<this-repository-state-bucket>
+export TF_LOCK_TABLE=<this-repository-lock-table>
+export BUDGET_ALERT_EMAIL=<operator-email>
+
+make pilot-guardrails-plan
+make pilot-cloud-plan
+
+# After a reviewed plan only.
+CONFIRM_APPLY=APPLY_FINOPS_PILOT make pilot-cloud-apply
+ECR_REPOSITORY_URL=<repository-url> IMAGE_TAG=<immutable-tag> make pilot-cloud-push-image
+KUBECONFIG=<private-cluster-config> make pilot-cloud-bootstrap-runtime
+KUBECONFIG=<private-cluster-config> make pilot-cloud-smoke
+
+# Only after evidence is recorded and RDS deletion is deliberately reviewed.
+CONFIRM_DESTROY=DESTROY_FINOPS_PILOT make pilot-cloud-destroy
+```
+
+`make pilot-cloud-validate` is safe to run without AWS credentials. It checks Terraform,
+Kubernetes/Kustomize, and static cloud contracts.
+
+## Future GitHub Actions setup
+
+The `cloud-pilot` workflow uses GitHub OpenID Connect (OIDC), not stored AWS access keys.
+Before it can run, create a restricted AWS role that trusts this repository, add its ARN
+as `AWS_PILOT_OIDC_ROLE_ARN`, and add the expected account, region, state bucket, lock
+table, and budget email as GitHub environment variables in the protected `aws-pilot`
+environment. Require human reviewers for that environment. The workflow has plan, apply,
+and destroy dropdown choices; apply and destroy also require their exact confirmation text.

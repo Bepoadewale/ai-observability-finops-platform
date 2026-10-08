@@ -3,6 +3,7 @@ variable "vpc_id" { type = string }
 variable "private_subnet_ids" { type = list(string) }
 variable "private_subnet_cidrs" { type = list(string) }
 variable "db_instance_class" { type = string }
+variable "deletion_protection" { type = bool }
 
 resource "aws_security_group" "database" {
   name        = "${var.name}-postgres"
@@ -45,7 +46,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible         = false
   storage_encrypted           = true
   backup_retention_period     = 7
-  deletion_protection         = true
+  deletion_protection         = var.deletion_protection
   skip_final_snapshot         = false
   final_snapshot_identifier   = "${var.name}-postgres-final"
 }

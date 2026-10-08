@@ -39,3 +39,15 @@ jobs:
       - name: Remove project-local infrastructure
         if: always()
         run: make clean
+
+  cloud-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: hashicorp/setup-terraform@v3
+      - uses: azure/setup-kubectl@v4
+      - run: pip install -e '.[dev]'
+      - run: make PY=python pilot-cloud-validate
+      - run: docker build -t ai-observability-finops-platform:ci -f analytics-api/Dockerfile .
