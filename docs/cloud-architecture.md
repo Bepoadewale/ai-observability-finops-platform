@@ -39,3 +39,11 @@ state. See [cloud security and state design](cloud-security.md).
 Terraform creates the private foundation; a reviewed Git change holds the workload state;
 Argo CD is planned to reconcile that state into EKS. The planned ingress is internal and
 routes only the analytics API paths. See [cloud delivery design](cloud-delivery.md).
+
+## Planned observability and recovery boundary
+
+The future private telemetry stack receives sanitized traces and metrics. It will alert on
+high TTFT and missing telemetry, keep two analytics API replicas available through planned
+Pod-loss drills, and use Git revert plus Argo CD for bad-image recovery. The bounded load
+and Cost Explorer queries are intentionally small/read-only pilot checks. See
+[cloud observability and reliability](cloud-observability.md).

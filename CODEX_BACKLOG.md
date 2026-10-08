@@ -13,7 +13,8 @@ None within local-first scope. Do not reopen a completion claim without new exec
 - [x] CP2: add separate state/lock/budget and private AWS runtime Terraform contracts.
 - [x] CP3: add static state, secret, IRSA, workload-hardening, and NetworkPolicy contracts.
 - [x] CP4: add immutable image, GitOps, External Secrets, and internal-ALB delivery contracts.
-- [ ] CP5–CP6: observability/reliability and repeatable cloud-pilot controls; no AWS apply until separately authorized.
+- [x] CP5: add observability, HA/recovery, bounded-load, failure, and cost-evidence contracts.
+- [ ] CP6: repeatable cloud-pilot CI/CD, operator controls, and final documentation review; no AWS apply until separately authorized.
 
 # P0 — Required for Portfolio Claim
 
