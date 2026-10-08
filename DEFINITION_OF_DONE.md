@@ -1,5 +1,9 @@
 # Definition of Done
 
+## Cloud-Pilot Readiness Gate
+
+Cloud readiness requires a plain-English cloud story, icon-based architecture, separate Terraform state/lock/budget design, private runtime/security boundaries, delivery, observability/failure design, OIDC CI controls, and an exact evidence/teardown runbook. None of these count as AWS execution until a guarded Terraform create → validate → destroy pilot is recorded.
+
 # Portfolio Complete — Local-First Scope Gate
 
 - [x] A working local AI application/runtime generates real OTLP traces and Prometheus metrics.

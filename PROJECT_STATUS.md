@@ -4,6 +4,10 @@
 
 PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE
 
+## Cloud-Pilot Readiness
+
+FOUNDATION. The cloud inventory exists; no AWS design, Terraform, plan, or resource exists yet.
+
 ## Maturity Model
 
 `FOUNDATION` → `PARTIALLY VALIDATED` → `LOCAL END-TO-END VALIDATED` → `PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE`.

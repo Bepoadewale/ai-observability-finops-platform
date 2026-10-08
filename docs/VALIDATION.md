@@ -1,5 +1,9 @@
 # Validation
 
+## Cloud-pilot baseline inventory
+
+**Date:** 2026-10-08. `make install` then `make verify` passed: Ruff, 7 tests, and Compose configuration. No Docker stack, AWS credential, Terraform command, or cloud resource was used for this inventory.
+
 ## Clean-Room Validation
 
 **Date:** 2026-09-23

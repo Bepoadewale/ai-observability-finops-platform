@@ -11,6 +11,10 @@ Commands: `make install`, `make bootstrap-local`, `make smoke`, `make demo-local
 
 Rules: label synthetic GPU data simulated; distinguish measured, estimated and forecast cost; never fabricate dashboards/telemetry; no secrets/main pushes; update status/backlog after validation.
 
+Cloud-pilot rule: Terraform is the only future AWS create/destroy authority. Keep AWS
+plans, applies, smoke tests, failures, cost queries, and teardown evidence separate;
+never call a diagram or plan executed cloud evidence. Write docs in plain English first.
+
 Completion rule: do not mark **PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE** unless `DEFINITION_OF_DONE.md` has executed evidence. Analytics code, fixture telemetry, Compose manifests, mocked tests, and dashboards without live data are insufficient. The AI request → telemetry → correlation → cost/SLO story must run locally; cloud/GPU adapters remain explicit.
 
 ## Clean-room reproducibility
