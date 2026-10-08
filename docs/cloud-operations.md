@@ -20,3 +20,10 @@ settles, often 24–48 hours later.
 4. Do not apply the runtime contract until the PostgreSQL storage adapter, secret
    delivery controller, image publishing, and runtime bootstrap are implemented and
    tested.
+
+## Future delivery checks
+
+Before an Argo CD sync, confirm the ECR image digest, workload IAM role, External Secrets
+status, database migration, and health endpoint. Wait on each component's readiness
+condition with a bounded timeout. Do not use fixed sleep commands or `kubectl apply` as a
+replacement for the reviewed GitOps path.

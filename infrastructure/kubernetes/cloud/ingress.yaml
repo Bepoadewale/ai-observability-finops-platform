@@ -1,0 +1,32 @@
+# Internal only. The current API has local-fixture authentication, not production OIDC;
+# do not change this to internet-facing until trusted identity and exact redirect/CORS
+# policy are implemented and tested.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: analytics-api
+  namespace: ai-observability
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/tags: Project=ai-observability-finops-platform,ManagedBy=terraform,Purpose=finops-cloud-pilot
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: analytics-api
+                port:
+                  name: http
+          - path: /docs
+            pathType: Prefix
+            backend:
+              service:
+                name: analytics-api
+                port:
+                  name: http

@@ -12,7 +12,8 @@ and what remains unexecuted.
 The static cloud contract now covers a private VPC/EKS/RDS/ECR design, scoped Pod AWS
 identity, secret references, and hardened Kubernetes workload settings. It has passed
 local Terraform and contract checks, but has not been planned or applied to AWS. See
-[cloud security and state design](docs/cloud-security.md).
+[cloud security and state design](docs/cloud-security.md) and
+[cloud delivery design](docs/cloud-delivery.md).
 
 An independently runnable measurement and financial-control layer for AI systems. It correlates request performance, model token use, inferred queue/tool bottlenecks, SLO state, tenant attribution, and versioned-price cost estimates.
 

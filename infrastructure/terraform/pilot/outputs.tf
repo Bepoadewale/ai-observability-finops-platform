@@ -18,3 +18,8 @@ output "analytics_irsa_role_arn" {
   value       = module.workload_identity.role_arn
   description = "Narrow workload identity role; it is not an operator credential."
 }
+
+output "alb_controller_irsa_role_arn" {
+  value       = module.alb_controller_identity.role_arn
+  description = "Future AWS Load Balancer Controller role; not a browser or operator credential."
+}

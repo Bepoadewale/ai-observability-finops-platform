@@ -73,3 +73,10 @@ module "workload_identity" {
   evidence_bucket_arn = module.data.evidence_bucket_arn
   runtime_secret_arn  = aws_secretsmanager_secret.runtime.arn
 }
+
+module "alb_controller_identity" {
+  source            = "../modules/alb-controller"
+  name              = local.name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_issuer_host  = module.eks.oidc_issuer_host
+}

@@ -18,6 +18,7 @@ They do not claim cloud execution.
 | GPU cost/telemetry | 🔵 SIMULATED | fixture-only GPU-time cost; no hardware claim |
 | Private VPC/EKS/ECR/RDS/S3 pilot Terraform | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | `terraform validate`; no AWS plan or apply |
 | IRSA, Secrets Manager, workload hardening, NetworkPolicies | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | checked-in static contracts and `tests/test_cloud_contracts.py` |
+| ECR digest, Argo CD, External Secrets, internal ALB delivery path | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | static contracts only; no controller or EKS run |
 | PostgreSQL application storage adapter | 📋 ROADMAP | current application uses local SQLite only |
 | Production warehouse/cloud providers | 📐 ARCHITECTURE / CONTRACT ONLY | not executed |
 
