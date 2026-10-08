@@ -9,6 +9,11 @@ Terraform plan has run yet.
 See the [cloud-pilot inventory](docs/cloud-pilot-inventory.md) for what will be added
 and what remains unexecuted.
 
+The static cloud contract now covers a private VPC/EKS/RDS/ECR design, scoped Pod AWS
+identity, secret references, and hardened Kubernetes workload settings. It has passed
+local Terraform and contract checks, but has not been planned or applied to AWS. See
+[cloud security and state design](docs/cloud-security.md).
+
 An independently runnable measurement and financial-control layer for AI systems. It correlates request performance, model token use, inferred queue/tool bottlenecks, SLO state, tenant attribution, and versioned-price cost estimates.
 
 It complements the portfolio: Project 1 governs infrastructure, Project 2 serves models, Project 3 executes agents safely; this project measures reliability, efficiency, and economics across them.

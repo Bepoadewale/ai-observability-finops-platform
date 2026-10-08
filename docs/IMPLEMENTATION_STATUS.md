@@ -1,6 +1,7 @@
 # Implementation Status
 
-Cloud status: 📋 planned. The local stack is executed evidence; no AWS design, plan, or runtime has been executed.
+Cloud status: 🟡 planned and statically validated. The local stack is executed evidence;
+no AWS account-authenticated plan, apply, runtime, or cloud telemetry has been executed.
 
 Cloud-pilot documents describe the intended private runtime and evidence requirements.
 They do not claim cloud execution.
@@ -15,6 +16,9 @@ They do not claim cloud execution.
 | Latency, tool, cost, saturation scenarios | ✅ EXECUTED LOCALLY | dedicated demo targets |
 | Versioned model-token costs | ✅ EXECUTED LOCALLY | Decimal-safe API and unit tests |
 | GPU cost/telemetry | 🔵 SIMULATED | fixture-only GPU-time cost; no hardware claim |
+| Private VPC/EKS/ECR/RDS/S3 pilot Terraform | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | `terraform validate`; no AWS plan or apply |
+| IRSA, Secrets Manager, workload hardening, NetworkPolicies | 🟡 IMPLEMENTED / NOT FULLY EXECUTED | checked-in static contracts and `tests/test_cloud_contracts.py` |
+| PostgreSQL application storage adapter | 📋 ROADMAP | current application uses local SQLite only |
 | Production warehouse/cloud providers | 📐 ARCHITECTURE / CONTRACT ONLY | not executed |
 
 ## Evidence boundary

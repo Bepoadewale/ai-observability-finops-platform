@@ -13,6 +13,8 @@ trace/metrics → correlation → estimated cost and SLO result. It has not run 
 
 ## Current boundary
 
-Terraform and AWS diagrams do not exist yet. They are the next staged work. No cloud,
-GPU, managed-observability, billing, or production benchmark claim may be made until
-an authorized pilot records evidence.
+The AWS diagram, separate Terraform state/lock design, private VPC/EKS/RDS/ECR contract,
+and static workload-security contract now exist and validate locally. No AWS account plan,
+apply, workload, managed-observability run, billing query, or production benchmark has
+been executed. No cloud, GPU, managed-observability, billing, or production benchmark
+claim may be made until an authorized pilot records evidence.

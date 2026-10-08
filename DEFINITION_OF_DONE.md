@@ -5,7 +5,11 @@
 Cloud readiness requires a plain-English cloud story, icon-based architecture, separate Terraform state/lock/budget design, private runtime/security boundaries, delivery, observability/failure design, OIDC CI controls, and an exact evidence/teardown runbook. None of these count as AWS execution until a guarded Terraform create → validate → destroy pilot is recorded.
 
 - [x] Cloud inventory identifies the local proof and cloud gaps.
-- [ ] Plain-English cloud story, official-icon SVG/source/attribution, trust boundary, and operations/evolution docs are reviewed.
+- [x] Plain-English cloud story, temporary SVG/source/attribution, trust boundary, and operations/evolution docs are reviewed.
+- [x] Separate state/lock/budget and private VPC/EKS/ECR/RDS/S3 Terraform contracts validate statically.
+- [x] Static workload contracts define IRSA, secret references, non-root security, probes, limits, PDB, and default-deny network policy.
+- [ ] Replace the temporary primary architecture diagram with official AWS Architecture Icons before the cloud design gate is review-ready.
+- [ ] Implement and execute PostgreSQL storage, secret delivery, EKS/GitOps runtime, observability, failure, and teardown proof before claiming cloud-pilot execution.
 
 # Portfolio Complete — Local-First Scope Gate
 
