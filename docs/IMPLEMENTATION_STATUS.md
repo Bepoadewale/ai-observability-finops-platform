@@ -2,6 +2,9 @@
 
 Cloud status: 📋 planned. The local stack is executed evidence; no AWS design, plan, or runtime has been executed.
 
+Cloud-pilot documents describe the intended private runtime and evidence requirements.
+They do not claim cloud execution.
+
 | Capability | Status | Validation |
 | --- | --- | --- |
 | Analytics/cost/SLO API | ✅ EXECUTED LOCALLY | `make test`, live API demos |

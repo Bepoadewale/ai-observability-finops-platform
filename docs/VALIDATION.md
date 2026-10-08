@@ -4,6 +4,12 @@
 
 **Date:** 2026-10-08. `make install` then `make verify` passed: Ruff, 7 tests, and Compose configuration. No Docker stack, AWS credential, Terraform command, or cloud resource was used for this inventory.
 
+## Cloud-story documentation review
+
+**Date:** 2026-10-08. Cloud architecture, operations, and production-evolution documents
+were added as design-only documentation. No AWS credential, Terraform command, cloud
+resource, or cloud telemetry was used.
+
 ## Clean-Room Validation
 
 **Date:** 2026-09-23
