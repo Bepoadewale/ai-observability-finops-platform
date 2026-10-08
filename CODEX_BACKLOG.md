@@ -6,6 +6,11 @@ PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE
 
 None within local-first scope. Do not reopen a completion claim without new executed evidence.
 
+# Cloud-Pilot Readiness
+
+- [ ] CP0: record cloud inventory and evidence boundary.
+- [ ] CP1–CP6: complete the staged cloud-pilot program; no AWS apply until separately authorized.
+
 # P0 — Required for Portfolio Claim
 
 P0 blocks `PORTFOLIO COMPLETE — LOCAL-FIRST SCOPE`; no P1/P2 work should be selected while a P0

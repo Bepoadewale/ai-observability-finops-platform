@@ -1,5 +1,7 @@
 # Implementation Status
 
+Cloud status: 📋 planned. The local stack is executed evidence; no AWS design, plan, or runtime has been executed.
+
 | Capability | Status | Validation |
 | --- | --- | --- |
 | Analytics/cost/SLO API | ✅ EXECUTED LOCALLY | `make test`, live API demos |
