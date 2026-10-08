@@ -1,0 +1,23 @@
+# Apply from the platform-owned Argo CD namespace after the private EKS runtime exists.
+# The chart/manifests remain in this repository so Git, not kubectl from an API process,
+# is the desired-state source of truth.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-observability-finops
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Bepoadewale/ai-observability-finops-platform.git
+    targetRevision: main
+    path: infrastructure/kubernetes/cloud
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ai-observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -33,3 +33,9 @@ analytics API replicas, a disruption budget, and default-deny network policies.
 This is not a cloud execution claim. The current service still uses SQLite locally, so a
 PostgreSQL storage adapter must be implemented before an AWS pilot can prove durable cloud
 state. See [cloud security and state design](cloud-security.md).
+
+## Planned delivery boundary
+
+Terraform creates the private foundation; a reviewed Git change holds the workload state;
+Argo CD is planned to reconcile that state into EKS. The planned ingress is internal and
+routes only the analytics API paths. See [cloud delivery design](cloud-delivery.md).

@@ -3,7 +3,7 @@ VENV := .venv
 PY := $(VENV)/bin/python
 export PYTHONPATH := analytics-api/src
 
-.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate cloud-contracts-validate
+.PHONY: install test lint demo bootstrap bootstrap-local smoke demo-local demo-degradation demo-recovery demo-cost-spike demo-tool-bottleneck demo-saturation demo-dashboard verify clean clean-local public-demo terraform-validate cloud-contracts-validate kustomize-validate
 install:
 	command -v $(PYTHON) >/dev/null || { echo "Python 3.12 is required"; exit 1; }
 	@if [ -x "$(PY)" ] && ! $(PY) -c 'import sys; assert sys.version_info[:2] == (3, 12)' >/dev/null 2>&1; then \
@@ -58,3 +58,7 @@ terraform-validate:
 
 cloud-contracts-validate:
 	$(PY) -m pytest -q tests/test_cloud_contracts.py
+
+kustomize-validate:
+	command -v kubectl >/dev/null || { echo "kubectl is required to render the cloud Kustomize contract"; exit 1; }
+	kubectl kustomize infrastructure/kubernetes/cloud >/dev/null

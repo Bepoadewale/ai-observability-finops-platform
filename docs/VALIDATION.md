@@ -13,10 +13,11 @@ resource, or cloud telemetry was used.
 ## Cloud security/state contract validation
 
 **Date:** 2026-10-08. `terraform fmt -recursive infrastructure/terraform`,
-`make terraform-validate`, and `make cloud-contracts-validate` passed. The complete
-Python test suite also passed: 11 tests, with one upstream `TestClient` deprecation
-warning. These checks validate HCL and checked-in workload contracts only. They did not
-authenticate to AWS, create a resource, run a Terraform plan, or prove a cloud runtime.
+`make terraform-validate`, `make cloud-contracts-validate`, and
+`make kustomize-validate` passed. The complete Python test suite also passed: 13 tests,
+with one upstream `TestClient` deprecation warning. These checks validate HCL and
+checked-in workload and delivery contracts only. They did not authenticate to AWS, create
+a resource, run a Terraform plan, or prove a cloud runtime.
 
 ## Clean-Room Validation
 

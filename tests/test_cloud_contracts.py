@@ -39,3 +39,23 @@ def test_data_contract_encrypts_and_does_not_publish_database():
     assert "publicly_accessible         = false" in data
     assert "storage_encrypted           = true" in data
     assert "aws_s3_bucket_server_side_encryption_configuration" in data
+
+
+def test_delivery_contract_uses_gitops_and_narrow_internal_ingress():
+    ingress = (ROOT / "infrastructure/kubernetes/cloud/ingress.yaml").read_text()
+    app = (ROOT / "infrastructure/argocd/ai-observability-finops.yaml").read_text()
+    controller = (ROOT / "infrastructure/terraform/modules/alb-controller/main.tf").read_text()
+    assert "alb.ingress.kubernetes.io/scheme: internal" in ingress
+    assert "path: /api" in ingress
+    assert "path: /docs" in ingress
+    assert "prometheus" not in ingress.lower()
+    assert "repoURL: https://github.com/Bepoadewale/ai-observability-finops-platform.git" in app
+    assert "aws-load-balancer-controller" in controller
+
+
+def test_cloud_delivery_never_commits_secret_values_or_mutable_image_tags():
+    secret = (ROOT / "infrastructure/kubernetes/cloud/external-secret.yaml").read_text()
+    deployment = (ROOT / "infrastructure/kubernetes/cloud/analytics-api.yaml").read_text()
+    assert "database-url" in secret
+    assert "postgres://" not in secret
+    assert "REPLACED_BY_IMMUTABLE_ECR_DIGEST_AT_DEPLOY_TIME" in deployment
